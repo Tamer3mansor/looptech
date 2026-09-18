@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoopTech — نبني الويب، نصنع الفرق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0A0A0F;
+    --surface: #111118;
+    --surface2: #1A1A24;
+    --border: rgba(255,255,255,0.07);
+    --accent: #5B6EF5;
+    --accent2: #8B5CF6;
+    --accent-glow: rgba(91,110,245,0.18);
+    --text: #F0F0F8;
+    --muted: #8888A0;
+    --tag-bg: rgba(91,110,245,0.12);
+    --tag-border: rgba(91,110,245,0.3);
+  }
+  :root[data-theme="light"] {
+    --bg: #F5F5FA;
+    --surface: #FFFFFF;
+    --surface2: #E8E8F0;
+    --border: rgba(0,0,0,0.09);
+    --accent: #4353E8;
+    --accent2: #7C3AED;
+    --accent-glow: rgba(67,83,232,0.1);
+    --text: #0A0A0F;
+    --muted: #5A5A70;
+    --tag-bg: rgba(67,83,232,0.08);
+    --tag-border: rgba(67,83,232,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; right: 0; left: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: var(--bg);
+    opacity: 0.95;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    color: var(--text); text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .theme-btn {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--muted); width: 36px; height: 36px; border-radius: 8px;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 24px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(91,110,245,0.15) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+    border-radius: 100px; padding: 6px 16px; margin-bottom: 32px;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+  }
+  .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .hero h1 {
+    font-size: clamp(42px, 8vw, 88px);
+    font-weight: 900; line-height: 1.05; letter-spacing: -2px;
+    max-width: 800px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub {
+    margin-top: 24px; max-width: 540px;
+    color: var(--muted); font-size: 18px; font-weight: 400; line-height: 1.7;
+  }
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; justify-content: center;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 36px; font-weight: 900; color: var(--text); letter-spacing: -1px; }
+  .stat-label { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .hero-cta { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    background: var(--accent); color: #fff; border: none;
+    padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700;
+    font-family: 'Cairo', sans-serif; cursor: pointer; text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+    padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700;
+    font-family: 'Cairo', sans-serif; cursor: pointer; text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 12px; font-weight: 600;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollDown 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollDown { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 24px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900; letter-spacing: -1px; line-height: 1.15;
+    max-width: 560px;
+  }
+  .section-sub {
+    color: var(--muted); font-size: 16px; margin-top: 12px; max-width: 500px;
+  }
+  .section-head { margin-bottom: 56px; }
+
+  /* ── PROJECTS GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    text-decoration: none; color: inherit;
+  }
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(91,110,245,0.12);
+  }
+  .project-thumb {
+    width: 100%; aspect-ratio: 16/9;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; position: relative; overflow: hidden;
+  }
+  .project-thumb-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--surface2) 0%, var(--bg) 100%);
+  }
+  .project-thumb-icon { position: relative; z-index: 1; }
+  .project-thumb-lines {
+    position: absolute; inset: 0; z-index: 0; opacity: 0.08;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--accent) 0, var(--accent) 1px,
+      transparent 0, transparent 50%
+    );
+    background-size: 20px 20px;
+  }
+  .project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .project-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+    color: var(--accent);
+  }
+  .tag-gray {
+    background: rgba(255,255,255,0.05); border-color: var(--border); color: var(--muted);
+  }
+  .project-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
+  .project-desc { font-size: 14px; color: var(--muted); line-height: 1.65; flex: 1; }
+  .project-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); font-weight: 600;
+  }
+  .project-link-arrow {
+    font-size: 18px; color: var(--accent); transition: transform 0.2s;
+  }
+  .project-card:hover .project-link-arrow { transform: translateX(-4px); }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .service-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: border-color 0.25s;
+  }
+  .service-card:hover { border-color: var(--accent); }
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--accent-glow); border: 1px solid var(--tag-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+  .service-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .service-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* ── COUNTRIES ── */
+  .countries-strip {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .country-pill {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 10px 20px;
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center;
+  }
+  .about-text p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
+  .about-text p strong { color: var(--text); }
+  .about-visual {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 36px;
+  }
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item { display: flex; gap: 20px; padding-bottom: 28px; position: relative; }
+  .timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute; right: 10px; top: 28px; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .timeline-dot {
+    width: 20px; height: 20px; min-width: 20px; border-radius: 50%;
+    background: var(--accent-glow); border: 2px solid var(--accent);
+    margin-top: 4px;
+  }
+  .timeline-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-content p { font-size: 13px; color: var(--muted); }
+
+  /* ── TECH STACK ── */
+  .stack-grid {
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .stack-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 18px;
+    font-size: 14px; font-weight: 600;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .stack-item:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    text-align: center; padding: 100px 24px;
+    position: relative; overflow: hidden;
+  }
+  .cta-inner {
+    max-width: 1200px; margin: 0 auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 24px; padding: 80px 40px;
+    position: relative;
+  }
+  .cta-glow {
+    position: absolute; width: 400px; height: 300px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .cta-inner h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900; letter-spacing: -1px; margin-bottom: 16px;
+    position: relative;
+  }
+  .cta-inner p {
+    color: var(--muted); font-size: 17px; margin-bottom: 36px;
+    max-width: 500px; margin-left: auto; margin-right: auto;
+    position: relative;
+  }
+  .cta-email {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 16px; font-weight: 700; color: var(--accent);
+    text-decoration: none; position: relative;
+  }
+  .cta-email:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  footer p { font-size: 13px; color: var(--muted); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero h1 { letter-spacing: -1px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 70px 20px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  /* ── CONTACT CARDS ── */
+  .contact-options {
+    display: flex; flex-direction: column; gap: 14px;
+    max-width: 480px; margin: 32px auto 0;
+    position: relative;
+  }
+  .contact-card {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 22px;
+    text-decoration: none; color: var(--text);
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .contact-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(91,110,245,0.1);
+  }
+  .contact-icon {
+    width: 44px; height: 44px; min-width: 44px;
+    background: var(--accent-glow); border: 1px solid var(--tag-border);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+  }
+  .contact-info { flex: 1; text-align: right; }
+  .contact-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+  .contact-value { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+  .contact-arrow { font-size: 18px; color: var(--accent); transition: transform 0.2s; }
+  .contact-card:hover .contact-arrow { transform: translateX(-3px); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Loop<span>Tech</span></a>
+  <ul class="nav-links">
+    <li><a href="#projects">المشاريع</a></li>
+    <li><a href="#services">خدماتنا</a></li>
+    <li><a href="#about">من نحن</a></li>
+    <li><a href="#contact">تواصل معنا</a></li>
+  </ul>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="تبديل الثيم" title="تبديل الثيم">☀</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">حوّل فكرتك إلى منتج حقيقي</div>
+  <h1>من الفكرة<br>إلى <span class="grad">المنتج</span></h1>
+  <p class="hero-sub">نصمم ونطور منتجات رقمية تجمع بين الأداء العالي وتجربة المستخدم — لعملاء في أسواق متعددة حول العالم.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">+10</div><div class="stat-label">مشروع مُسلَّم</div></div>
+    <div class="stat"><div class="stat-num">5+</div><div class="stat-label">أسواق دولية</div></div>
+    <div class="stat"><div class="stat-num">2+</div><div class="stat-label">سنوات في الصناعة</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">معدل رضا العملاء</div></div>
+  </div>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary">استعرض أعمالنا</a>
+    <a href="#contact" class="btn-outline">ابدأ مشروعك</a>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div></div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-head">
+    <div class="section-label">أعمالنا</div>
+    <h2 class="section-title">مشاريع أثبتت<br>نفسها في السوق</h2>
+    <p class="section-sub">منتجات رقمية سلّمناها لعملاء في أسواق متعددة — كل مشروع يعكس منهجية عمل مبنية على الجودة والاستدامة.</p>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- 1 -->
+    <a href="https://almuhtarif-v1.vercel.app/home" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">🏆</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">أكاديمية رياضية</span>
+          <span class="tag tag-gray">🇸🇦 السعودية</span>
+        </div>
+        <div class="project-title">المحترف — الأكاديمية الرياضية</div>
+        <div class="project-desc">منصة ويب لأكاديمية رياضية سعودية مبنية بـ React — تعرض البرامج التدريبية وتتيح التسجيل والتواصل بشكل سهل وعصري.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">React</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Vercel</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>almuhtarif-v1.vercel.app</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 2 -->
+    <a href="https://finioon.com/ar" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#1A1A2A,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">❄️</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">صيانة تكييفات</span>
+          <span class="tag tag-gray">🇸🇦 السعودية</span>
+        </div>
+        <div class="project-title">Finioon — خدمات التكييف</div>
+        <div class="project-desc">موقع متكامل لشركة صيانة تكييفات سعودية مبني بـ Laravel — يتيح حجز الخدمات وعرض العروض بشكل منظم واحترافي.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Laravel</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">PHP</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>finioon.com</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 3 -->
+    <a href="https://yiwuhuachi.com/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#1A1524,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">🌏</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">تجارة دولية</span>
+          <span class="tag tag-gray">🇨🇳 الصين</span>
+          <span class="tag tag-gray">🌍 الشرق الأوسط</span>
+        </div>
+        <div class="project-title">Yiwu Huachi — التجارة الصينية</div>
+        <div class="project-desc">موقع عرض لشركة تربط بين الموردين الصينيين والمستوردين في الشرق الأوسط — تصميم يعكس احترافية التجارة الدولية وثقة الطرفين.</div>
+      </div>
+      <div class="project-footer">
+        <span>yiwuhuachi.com</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 4 -->
+    <a href="https://mtn-ksa.com/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#0F1A0F,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">📡</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">لاندنج بيج</span>
+          <span class="tag tag-gray">🇸🇦 السعودية</span>
+        </div>
+        <div class="project-title">MTN KSA — اتصالات سعودية</div>
+        <div class="project-desc">لاندنج بيج احترافية لشركة MTN السعودية للتحكم والمراقبة — بتحكم كامل في المحتوى والتصميم ومُحسَّنة للتحويل.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">SEO</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">CMS</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>mtn-ksa.com</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 5 -->
+    <a href="https://highacademystore.com/ar" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#1A1524,#0A0F1A)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">📚</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">منصة تعليمية</span>
+          <span class="tag tag-gray">🇪🇬 مصر</span>
+        </div>
+        <div class="project-title">High Academy — منصة التعلم</div>
+        <div class="project-desc">منصة مصرية متكاملة لحجز الدروس الخاصة وشراء الكتب أونلاين — مع داشبورد إدارية كاملة للمعلمين والإدارة، مبنية بـ Laravel.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Laravel</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Dashboard</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">E-commerce</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>highacademystore.com</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 6 -->
+    <a href="https://lugano-task-management.vercel.app/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#0F141A,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">📋</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">إدارة مهام</span>
+          <span class="tag tag-gray">SaaS</span>
+        </div>
+        <div class="project-title">Lugano — إدارة المشاريع</div>
+        <div class="project-desc">منصة إدارية بسيطة وذكية لتتبع المهام والمشاريع — واجهة نظيفة وسريعة تساعد الفرق على البقاء منظمين.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">React</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Vercel</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>lugano-task-management.vercel.app</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 7 -->
+    <a href="https://fatouraelectoni.vercel.app/login" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#1A0F1A,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">💼</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">SaaS عربي</span>
+          <span class="tag tag-gray">إدارة مبيعات</span>
+        </div>
+        <div class="project-title">فاتورة إلكتروني — إدارة المبيعات</div>
+        <div class="project-desc">منصة SaaS عربية كاملة لإدارة المبيعات والفرق — فواتير إلكترونية، تقارير، وإدارة العملاء في مكان واحد.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">React</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">SaaS</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>fatouraelectoni.vercel.app</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 8 -->
+    <a href="https://examifylugano.vercel.app/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#0A1A1A,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">🧠</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">امتحانات ذكية</span>
+          <span class="tag tag-gray">EdTech</span>
+        </div>
+        <div class="project-title">Examify — منصة الامتحانات</div>
+        <div class="project-desc">منصة امتحانات إلكترونية ذكية — تتيح إنشاء الاختبارات وإدارتها وتحليل نتائج الطلاب بشكل تلقائي ومرئي.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">React</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Vercel</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>examifylugano.vercel.app</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 9 -->
+    <a href="https://ec-ommerce-frontend.vercel.app/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#1A0F0A,#0A0A0F)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">🛍️</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">متجر إلكتروني</span>
+          <span class="tag tag-gray">E-commerce</span>
+        </div>
+        <div class="project-title">واجهة المتجر الإلكتروني</div>
+        <div class="project-desc">واجهة أمامية عصرية لمتجر إلكتروني — تجربة تسوق سلسة وسريعة مع عرض احترافي للمنتجات وسلة مشتريات متكاملة.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">React</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Frontend</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>ec-ommerce-frontend.vercel.app</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+    <!-- 10 -->
+    <a href="https://ar-rahman.fr/" target="_blank" rel="noopener" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background:linear-gradient(135deg,#0A0A1A,#0F0A14)"></div>
+        <div class="project-thumb-lines"></div>
+        <div class="project-thumb-icon">🌙</div>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="tag">تعليم العربية</span>
+          <span class="tag tag-gray">🇫🇷 فرنسا</span>
+        </div>
+        <div class="project-title">Ar-Rahman — تعليم اللغة العربية</div>
+        <div class="project-desc">موقع لمنصة تعليم اللغة العربية للناطقين بالفرنسية — يعرض البرامج والمعلمين ويتيح التسجيل بشكل بسيط ومقنع.</div>
+        <div class="stack-grid" style="margin-top:8px;">
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">Landing Page</span>
+          <span class="stack-item" style="font-size:12px;padding:5px 12px;">فرنسا</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>ar-rahman.fr</span>
+        <span class="project-link-arrow">←</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background:var(--surface);max-width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+<div style="max-width:1200px;margin:0 auto;">
+  <div class="section-head">
+    <div class="section-label">خدماتنا</div>
+    <h2 class="section-title">حلول رقمية<br>متكاملة</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <div class="service-title">تطوير الويب</div>
+      <div class="service-desc">تطوير مواقع ومنصات ويب عالية الأداء — من المواقع التعريفية إلى أنظمة SaaS المعقدة، بأحدث التقنيات وبنية قابلة للتوسع.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <div class="service-title">تطبيقات الموبايل</div>
+      <div class="service-desc">تطوير تطبيقات iOS وAndroid بتجربة مستخدم متسقة وأداء محسّن، مع دعم كامل لمتطلبات النشر والصيانة.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔍</div>
+      <div class="service-title">تحسين محركات البحث</div>
+      <div class="service-desc">استراتيجيات SEO تقني وهيكلي مدمجة في بنية المشروع منذ البداية — لضمان ظهور قوي ومستدام في نتائج البحث.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛒</div>
+      <div class="service-title">التجارة الإلكترونية</div>
+      <div class="service-desc">منصات تجارة إلكترونية متكاملة تشمل إدارة المنتجات وبوابات الدفع وتتبع الطلبات، مصممة لتحقيق أعلى معدلات التحويل.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚙️</div>
+      <div class="service-title">الأنظمة الإدارية</div>
+      <div class="service-desc">لوحات تحكم وأنظمة إدارة مخصصة تتضمن إدارة الصلاحيات والتقارير التحليلية وأتمتة العمليات التشغيلية.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <div class="service-title">UI/UX Design</div>
+      <div class="service-desc">تصميم واجهات مستخدم قائمة على مبادئ تجربة المستخدم وأبحاث السلوك — لضمان منتج يُستخدم بكفاءة ويُحقق أهداف العمل.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-head">
+    <div class="section-label">من نحن</div>
+    <h2 class="section-title">نهج مختلف<br>في بناء المنتجات</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p><strong>LoopTech</strong> شركة تقنية متخصصة في تصميم وتطوير المنتجات الرقمية، تجمع بين الكفاءة التقنية والفهم العميق لمتطلبات السوق.</p>
+      <p>نعمل مع العملاء كشركاء استراتيجيين، لا كمنفذين فقط. كل مشروع يمر بمنهجية واضحة تبدأ بفهم الأهداف التجارية وتنتهي بتسليم منتج قابل للقياس والتطوير.</p>
+      <p>خبرتنا تمتد عبر قطاعات متعددة — التعليم، التجارة الإلكترونية، الخدمات، وإدارة الأعمال — في أسواق عربية وأوروبية وآسيوية.</p>
+      <div class="countries-strip" style="margin-top:28px;">
+        <div class="country-pill">🇸🇦 السعودية</div>
+        <div class="country-pill">🇪🇬 مصر</div>
+        <div class="country-pill">🇨🇳 الصين</div>
+        <div class="country-pill">🇫🇷 فرنسا</div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h4>الفهم والتخطيط</h4>
+            <p>نبدأ بتحليل متطلبات المشروع وأهدافه التجارية قبل كتابة أي سطر كود.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h4>التصميم والنمذجة</h4>
+            <p>نصمم تجربة المستخدم ونبني نماذج أولية للتحقق من الرؤية قبل التنفيذ.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h4>التطوير والاختبار</h4>
+            <p>تطوير منضبط وفق معايير الجودة مع اختبار مستمر في كل مرحلة.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h4>الإطلاق والدعم</h4>
+            <p>نطلق المنتج ونواصل الدعم التقني لضمان الاستقرار والتطوير المستمر.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div style="margin-top:64px;">
+    <div class="section-label">التقنيات</div>
+    <h3 style="font-size:22px;font-weight:700;margin-bottom:24px;">التقنيات والأدوات</h3>
+    <div class="stack-grid">
+      <div class="stack-item">React</div>
+      <div class="stack-item">Next.js</div>
+      <div class="stack-item">Laravel</div>
+      <div class="stack-item">PHP</div>
+      <div class="stack-item">Flutter</div>
+      <div class="stack-item">JavaScript</div>
+      <div class="stack-item">TypeScript</div>
+      <div class="stack-item">MySQL</div>
+      <div class="stack-item">PostgreSQL</div>
+      <div class="stack-item">Tailwind CSS</div>
+      <div class="stack-item">Node.js</div>
+      <div class="stack-item">REST APIs</div>
+      <div class="stack-item">Git</div>
+      <div class="stack-item">Vercel</div>
+      <div class="stack-item">SEO</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="cta-glow"></div>
+    <h2>لديك مشروع<br>تريد تنفيذه؟</h2>
+    <p>شاركنا فكرتك وسيتواصل معك فريقنا لدراسة المتطلبات وتقديم المقترح المناسب.</p>
+    <div class="contact-options">
+      <a href="https://wa.me/201013699131" target="_blank" rel="noopener" class="contact-card">
+        <div class="contact-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="currentColor"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.558 4.133 1.535 5.865L.057 23.215a.75.75 0 00.92.92l5.356-1.478A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.964-1.362l-.355-.212-3.683 1.016 1.017-3.682-.213-.356A9.712 9.712 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-label">WhatsApp / هاتف</div>
+          <div class="contact-value" dir="ltr">+20 101 369 9131</div>
+        </div>
+        <div class="contact-arrow">←</div>
+      </a>
+      <a href="mailto:tamermansor371@gmail.com" class="contact-card">
+        <div class="contact-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-label">البريد الإلكتروني</div>
+          <div class="contact-value" dir="ltr">tamermansor371@gmail.com</div>
+        </div>
+        <div class="contact-arrow">←</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 LoopTech. جميع الحقوق محفوظة.</p>
+  <a href="#" class="nav-logo" style="font-size:16px;">Loop<span>Tech</span></a>
+</footer>
+
+<script>
+  // Set dark as default immediately to avoid flash
+  document.documentElement.setAttribute('data-theme', 'dark');
+
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-btn');
+    if (root.getAttribute('data-theme') === 'dark') {
+      root.setAttribute('data-theme', 'light');
+      btn.textContent = '🌙';
+    } else {
+      root.setAttribute('data-theme', 'dark');
+      btn.textContent = '☀️';
+    }
+  }
+</script>
+</body>
+</html>
