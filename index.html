@@ -7,389 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root[data-theme="dark"] {
-    --bg: #0A0A0F;
-    --surface: #111118;
-    --surface2: #1A1A24;
-    --border: rgba(255,255,255,0.07);
-    --accent: #5B6EF5;
-    --accent2: #8B5CF6;
-    --accent-glow: rgba(91,110,245,0.18);
-    --text: #F0F0F8;
-    --muted: #8888A0;
-    --tag-bg: rgba(91,110,245,0.12);
-    --tag-border: rgba(91,110,245,0.3);
-  }
-  :root[data-theme="light"] {
-    --bg: #F5F5FA;
-    --surface: #FFFFFF;
-    --surface2: #E8E8F0;
-    --border: rgba(0,0,0,0.09);
-    --accent: #4353E8;
-    --accent2: #7C3AED;
-    --accent-glow: rgba(67,83,232,0.1);
-    --text: #0A0A0F;
-    --muted: #5A5A70;
-    --tag-bg: rgba(67,83,232,0.08);
-    --tag-border: rgba(67,83,232,0.25);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Cairo', sans-serif;
-    font-size: 16px;
-    line-height: 1.7;
-    overflow-x: hidden;
-    transition: background 0.3s, color 0.3s;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; right: 0; left: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 48px;
-    background: var(--bg);
-    opacity: 0.95;
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    transition: background 0.3s, border-color 0.3s;
-  }
-  .nav-logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
-    color: var(--text); text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--text); }
-  .theme-btn {
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--muted); width: 36px; height: 36px; border-radius: 8px;
-    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-  }
-  .theme-btn:hover { color: var(--text); border-color: var(--accent); }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 120px 24px 80px;
-    position: relative; overflow: hidden;
-  }
-  .hero-glow {
-    position: absolute; width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(91,110,245,0.15) 0%, transparent 70%);
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--tag-bg); border: 1px solid var(--tag-border);
-    border-radius: 100px; padding: 6px 16px; margin-bottom: 32px;
-    font-size: 13px; font-weight: 600; color: var(--accent);
-  }
-  .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  .hero h1 {
-    font-size: clamp(42px, 8vw, 88px);
-    font-weight: 900; line-height: 1.05; letter-spacing: -2px;
-    max-width: 800px;
-  }
-  .hero h1 .grad {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .hero-sub {
-    margin-top: 24px; max-width: 540px;
-    color: var(--muted); font-size: 18px; font-weight: 400; line-height: 1.7;
-  }
-  .hero-stats {
-    display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; justify-content: center;
-  }
-  .stat { text-align: center; }
-  .stat-num { font-size: 36px; font-weight: 900; color: var(--text); letter-spacing: -1px; }
-  .stat-label { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
-  .hero-cta { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-  .btn-primary {
-    background: var(--accent); color: #fff; border: none;
-    padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700;
-    font-family: 'Cairo', sans-serif; cursor: pointer; text-decoration: none;
-    display: inline-block;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--border);
-    padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700;
-    font-family: 'Cairo', sans-serif; cursor: pointer; text-decoration: none;
-    display: inline-block;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .btn-outline:hover { border-color: var(--accent); transform: translateY(-1px); }
-
-  /* scroll indicator */
-  .scroll-hint {
-    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    color: var(--muted); font-size: 12px; font-weight: 600;
-  }
-  .scroll-line {
-    width: 1px; height: 40px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: scrollDown 1.8s ease-in-out infinite;
-  }
-  @keyframes scrollDown { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 100%{transform:scaleY(0);transform-origin:bottom} }
-
-  /* ── SECTIONS ── */
-  section { padding: 100px 24px; max-width: 1200px; margin: 0 auto; }
-  .section-label {
-    display: inline-block;
-    font-size: 12px; font-weight: 700; letter-spacing: 2px;
-    color: var(--accent); text-transform: uppercase; margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: clamp(28px, 4vw, 44px);
-    font-weight: 900; letter-spacing: -1px; line-height: 1.15;
-    max-width: 560px;
-  }
-  .section-sub {
-    color: var(--muted); font-size: 16px; margin-top: 12px; max-width: 500px;
-  }
-  .section-head { margin-bottom: 56px; }
-
-  /* ── PROJECTS GRID ── */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
-  }
-  .project-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
-    display: flex; flex-direction: column;
-    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
-    text-decoration: none; color: inherit;
-  }
-  .project-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(91,110,245,0.12);
-  }
-  .project-thumb {
-    width: 100%; aspect-ratio: 16/9;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px; position: relative; overflow: hidden;
-  }
-  .project-thumb-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--surface2) 0%, var(--bg) 100%);
-  }
-  .project-thumb-icon { position: relative; z-index: 1; }
-  .project-thumb-lines {
-    position: absolute; inset: 0; z-index: 0; opacity: 0.08;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      var(--accent) 0, var(--accent) 1px,
-      transparent 0, transparent 50%
-    );
-    background-size: 20px 20px;
-  }
-  .project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
-  .project-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .tag {
-    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
-    background: var(--tag-bg); border: 1px solid var(--tag-border);
-    color: var(--accent);
-  }
-  .tag-gray {
-    background: rgba(255,255,255,0.05); border-color: var(--border); color: var(--muted);
-  }
-  .project-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
-  .project-desc { font-size: 14px; color: var(--muted); line-height: 1.65; flex: 1; }
-  .project-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px; border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--muted); font-weight: 600;
-  }
-  .project-link-arrow {
-    font-size: 18px; color: var(--accent); transition: transform 0.2s;
-  }
-  .project-card:hover .project-link-arrow { transform: translateX(-4px); }
-
-  /* ── SERVICES ── */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-  }
-  .service-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 16px; padding: 28px;
-    transition: border-color 0.25s;
-  }
-  .service-card:hover { border-color: var(--accent); }
-  .service-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    background: var(--accent-glow); border: 1px solid var(--tag-border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; margin-bottom: 16px;
-  }
-  .service-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .service-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
-
-  /* ── COUNTRIES ── */
-  .countries-strip {
-    display: flex; gap: 16px; flex-wrap: wrap;
-  }
-  .country-pill {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 100px; padding: 10px 20px;
-    font-size: 14px; font-weight: 600;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  /* ── ABOUT ── */
-  .about-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-    align-items: center;
-  }
-  .about-text p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
-  .about-text p strong { color: var(--text); }
-  .about-visual {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 36px;
-  }
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .timeline-item { display: flex; gap: 20px; padding-bottom: 28px; position: relative; }
-  .timeline-item:not(:last-child)::before {
-    content: '';
-    position: absolute; right: 10px; top: 28px; bottom: 0;
-    width: 1px; background: var(--border);
-  }
-  .timeline-dot {
-    width: 20px; height: 20px; min-width: 20px; border-radius: 50%;
-    background: var(--accent-glow); border: 2px solid var(--accent);
-    margin-top: 4px;
-  }
-  .timeline-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .timeline-content p { font-size: 13px; color: var(--muted); }
-
-  /* ── TECH STACK ── */
-  .stack-grid {
-    display: flex; flex-wrap: wrap; gap: 12px;
-  }
-  .stack-item {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 10px 18px;
-    font-size: 14px; font-weight: 600;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .stack-item:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── CTA SECTION ── */
-  .cta-section {
-    text-align: center; padding: 100px 24px;
-    position: relative; overflow: hidden;
-  }
-  .cta-inner {
-    max-width: 1200px; margin: 0 auto;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 24px; padding: 80px 40px;
-    position: relative;
-  }
-  .cta-glow {
-    position: absolute; width: 400px; height: 300px;
-    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  .cta-inner h2 {
-    font-size: clamp(28px, 4vw, 48px);
-    font-weight: 900; letter-spacing: -1px; margin-bottom: 16px;
-    position: relative;
-  }
-  .cta-inner p {
-    color: var(--muted); font-size: 17px; margin-bottom: 36px;
-    max-width: 500px; margin-left: auto; margin-right: auto;
-    position: relative;
-  }
-  .cta-email {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 16px; font-weight: 700; color: var(--accent);
-    text-decoration: none; position: relative;
-  }
-  .cta-email:hover { text-decoration: underline; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 48px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-    max-width: 1200px; margin: 0 auto;
-  }
-  footer p { font-size: 13px; color: var(--muted); }
-
-  /* ── RESPONSIVE ── */
-  @media(max-width: 768px) {
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
-    .hero h1 { letter-spacing: -1px; }
-    .about-grid { grid-template-columns: 1fr; gap: 40px; }
-    section { padding: 70px 20px; }
-    .projects-grid { grid-template-columns: 1fr; }
-    footer { padding: 24px 20px; flex-direction: column; text-align: center; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-  }
-
-  /* ── CONTACT CARDS ── */
-  .contact-options {
-    display: flex; flex-direction: column; gap: 14px;
-    max-width: 480px; margin: 32px auto 0;
-    position: relative;
-  }
-  .contact-card {
-    display: flex; align-items: center; gap: 16px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 18px 22px;
-    text-decoration: none; color: var(--text);
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-  }
-  .contact-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(91,110,245,0.1);
-  }
-  .contact-icon {
-    width: 44px; height: 44px; min-width: 44px;
-    background: var(--accent-glow); border: 1px solid var(--tag-border);
-    border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    color: var(--accent);
-  }
-  .contact-info { flex: 1; text-align: right; }
-  .contact-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
-  .contact-value { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-  .contact-arrow { font-size: 18px; color: var(--accent); transition: transform 0.2s; }
-  .contact-card:hover .contact-arrow { transform: translateX(-3px); }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -398,11 +16,16 @@
   <a href="#" class="nav-logo">Loop<span>Tech</span></a>
   <ul class="nav-links">
     <li><a href="#projects">المشاريع</a></li>
+    <li><a href="#app-suite">حلول تطبيقية</a></li>
+    <li><a href="#capabilities">نقدر نبني</a></li>
     <li><a href="#services">خدماتنا</a></li>
     <li><a href="#about">من نحن</a></li>
     <li><a href="#contact">تواصل معنا</a></li>
   </ul>
-  <button class="theme-btn" onclick="toggleTheme()" aria-label="تبديل الثيم" title="تبديل الثيم">☀</button>
+  <div class="nav-actions" aria-label="Page controls">
+    <button class="lang-btn" onclick="toggleLanguage()" aria-label="Switch to English" title="Switch to English">EN</button>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="تفعيل الوضع الداكن" title="تفعيل الوضع الداكن">☾</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -685,6 +308,89 @@
   </div>
 </section>
 
+<!-- APP SUITE CASE STUDY -->
+<section id="app-suite" class="app-suite-section">
+  <div class="section-head app-suite-head">
+    <div>
+      <div class="section-label">منظومة تطبيقات</div>
+      <h2 class="section-title">ع الطلب بلس<br><span class="grad-text">تجربة واحدة، 3 أدوار</span></h2>
+    </div>
+    <p class="section-sub">منظومة توصيل متكاملة تربط العميل بالتاجر والسائق في دورة تشغيل واحدة — من إنشاء الطلب إلى التوصيل.</p>
+  </div>
+
+  <div class="suite-visual glass-panel">
+    <div class="suite-visual-copy">
+      <span class="eyebrow">Delivery ecosystem</span>
+      <h3>كل طرف عنده تطبيقه.<br>والمنظومة شغالة كنظام واحد.</h3>
+      <p>تصميم وتنفيذ تجربة متعددة الأطراف تشمل الطلب، إدارة المتجر، توزيع الرحلات، وتتبع حالة الطلب.</p>
+      <div class="suite-flow" aria-label="تدفق الطلب"><span>عميل</span><b>←</b><span>تاجر</span><b>←</b><span>سائق</span></div>
+    </div>
+    <div class="suite-visual-art" aria-hidden="true">
+      <div class="visual-ring visual-ring-one"></div><div class="visual-ring visual-ring-two"></div>
+      <div class="visual-device visual-device-main"><div class="device-notch"></div><strong>ع الطلب</strong><span>اطلبها.. توصلك</span><i></i><i></i><i></i></div>
+      <div class="visual-device visual-device-small visual-device-driver"><div class="device-notch"></div><span class="mini-bike">⌁</span><strong>سائق</strong></div>
+      <div class="visual-device visual-device-small visual-device-store"><div class="device-notch"></div><span class="mini-store">▦</span><strong>تاجر</strong></div>
+    </div>
+  </div>
+
+  <div class="suite-apps-grid">
+    <article class="suite-app-card suite-customer">
+      <div class="suite-app-top"><div class="suite-app-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM7 8h10M7 12h6M7 16h8"/></svg></div><span class="suite-role">تطبيق العميل</span></div>
+      <h3>ع الطلب بلس</h3><p>تطبيق طلب وتوصيل لأهالي مدينة الحلة، يتيح اكتشاف المطاعم والمتاجر والطلب بسهولة مع عروض وخصومات.</p>
+      <div class="suite-features"><span>مطاعم ومتاجر</span><span>تتبع الطلب</span><span>كوبونات</span></div>
+      <div class="store-links"><a href="https://play.google.com/store/apps/details?id=com.talabplus.app&amp;pcampaignid=web_share" target="_blank" rel="noopener" class="store-link"><span class="store-mark">▶</span><span>Google Play</span></a><a href="https://apps.apple.com/eg/app/%D8%B9-%D8%A7%D9%84%D8%B7%D9%84%D8%A8-%D8%A8%D9%84%D8%B3/id6755089365" target="_blank" rel="noopener" class="store-link"><span class="store-mark">●</span><span>App Store</span></a></div>
+    </article>
+    <article class="suite-app-card suite-driver">
+      <div class="suite-app-top"><div class="suite-app-icon"><svg viewBox="0 0 24 24"><path d="M5 16h14M7 16l1-5h7l3 5M9 11l2-3h4l2 3M8 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/></svg></div><span class="suite-role">تطبيق السائق</span></div>
+      <h3>ع الطلب — سائق</h3><p>واجهة تشغيل للسائقين لاستقبال الطلبات، متابعة تفاصيل الرحلة، ومعرفة حالة التوصيل لحظة بلحظة.</p>
+      <div class="suite-features"><span>استقبال الطلبات</span><span>الموقع والرحلات</span><span>حالة التوصيل</span></div>
+      <div class="store-links"><a href="https://play.google.com/store/apps/details?id=com.webeasystep.talab_drivers&amp;pcampaignid=web_share" target="_blank" rel="noopener" class="store-link"><span class="store-mark">▶</span><span>Google Play</span></a><a href="https://apps.apple.com/eg/app/%D8%B9-%D8%A7%D9%84%D8%B7%D9%84%D8%A8-%D8%B3%D8%A7%D8%A6%D9%82/id6449415510" target="_blank" rel="noopener" class="store-link"><span class="store-mark">●</span><span>App Store</span></a></div>
+    </article>
+    <article class="suite-app-card suite-merchant">
+      <div class="suite-app-top"><div class="suite-app-icon"><svg viewBox="0 0 24 24"><path d="M4 10h16M5 10v9h14v-9M7 10V6h10v4M8 14h3M8 17h5"/></svg></div><span class="suite-role">تطبيق التاجر</span></div>
+      <h3>ع الطلب — تاجر</h3><p>لوحة تشغيل للمطاعم والمتاجر لإنشاء وإدارة الطلبات، طلب السائقين، ومتابعة سير التوصيل.</p>
+      <div class="suite-features"><span>إدارة الطلبات</span><span>طلب سائق</span><span>تشغيل المتجر</span></div>
+      <div class="store-links"><a href="https://play.google.com/store/apps/details?id=com.webeasystep.talab&amp;pcampaignid=web_share" target="_blank" rel="noopener" class="store-link"><span class="store-mark">▶</span><span>Google Play</span></a><a href="https://apps.apple.com/eg/app/%D8%B9-%D8%A7%D9%84%D8%B7%D9%84%D8%A8-%D8%AA%D8%A7%D8%AC%D8%B1/id1660631021" target="_blank" rel="noopener" class="store-link"><span class="store-mark">●</span><span>App Store</span></a></div>
+    </article>
+  </div>
+  <div class="suite-note"><span class="note-icon" aria-hidden="true">↗</span><span>عرض المنظومة هنا يركّز على نوع الحل والتجربة المتكاملة، مع روابط مباشرة للنسخ المنشورة على المتاجر.</span></div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities" class="capabilities-section">
+  <div class="section-head capabilities-head">
+    <div class="section-label">نطاق التنفيذ</div>
+    <h2 class="section-title">أي فكرة رقمية<br><span class="grad-text">لها طريق للتنفيذ</span></h2>
+    <p class="section-sub">مش لازم تكون فكرتك شبه مشروع سابق. بنحوّل احتياجك إلى تجربة واضحة، نظام قابل للتوسع، ومنتج جاهز للنمو.</p>
+  </div>
+
+  <div class="capabilities-layout">
+    <div class="capabilities-intro glass-panel">
+      <div class="capability-orbit" aria-hidden="true">
+        <span class="orbit-dot orbit-dot-one"></span><span class="orbit-dot orbit-dot-two"></span><span class="orbit-dot orbit-dot-three"></span><span class="orbit-core">LT</span>
+      </div>
+      <div>
+        <span class="eyebrow">من الـ MVP للمنتج الكامل</span>
+        <h3>نبدأ من المشكلة،<br>ونبني الحل المناسب.</h3>
+        <p>تقدر تبدأ بنموذج Static أو نسخة أولية، وبعدها نطوّرها تدريجيًا إلى منصة كاملة بواجهة مستخدم، لوحة تحكم، صلاحيات، دفع، وتحليلات.</p>
+      </div>
+      <div class="capability-proof"><span class="proof-dot"></span> تصميم قابل للتوسع من أول يوم</div>
+    </div>
+
+    <div class="capabilities-grid">
+      <article class="capability-card capability-featured"><div class="capability-icon icon-indigo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13ZM8 8h8M8 12h5M8 16h7"/></svg></div><span class="capability-index">01</span><h3>منصات التوظيف والاستقدام</h3><p>بوابات للباحثين عن عمل والشركات ومكاتب الاستقدام: ملفات شخصية، وظائف، بحث متقدم، تقديم ومتابعة الطلبات.</p><div class="capability-tags"><span>Job Boards</span><span>Recruitment</span><span>Portals</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2 11h10l3-8H6M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg></div><span class="capability-index">02</span><h3>التجارة الإلكترونية</h3><p>متاجر B2C وB2B، كتالوجات، سلة ودفع، كوبونات، شحن، وتتبع الطلبات.</p><div class="capability-tags"><span>E-commerce</span><span>Payments</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-cyan" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3h9A2.5 2.5 0 0 1 19 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18.5v-13ZM8 7h8M8 11h8M8 15h5"/></svg></div><span class="capability-index">03</span><h3>التعليم والمنصات التدريبية</h3><p>كورسات، امتحانات، حجز دروس، متابعة الطلاب، ومحتوى تعليمي منظم.</p><div class="capability-tags"><span>EdTech</span><span>LMS</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 4h6M8 12h8M8 16h5"/></svg></div><span class="capability-index">04</span><h3>تطبيقات الويب وSaaS</h3><p>منتجات اشتراك، مساحات عمل، صلاحيات، تقارير، وإدارة فرق.</p><div class="capability-tags"><span>SaaS</span><span>Dashboards</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm3 15h4M9 6h6"/></svg></div><span class="capability-index">05</span><h3>تطبيقات الموبايل</h3><p>تطبيقات iOS وAndroid مرتبطة بواجهة API ولوحة تحكم.</p><div class="capability-tags"><span>iOS</span><span>Android</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-pink" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18h16M5 15l3-4 3 2 4-6 4 5M5 5h14"/></svg></div><span class="capability-index">06</span><h3>الخدمات والحجوزات</h3><p>حجز مواعيد، طلب خدمات، عروض أسعار، وإدارة العملاء.</p><div class="capability-tags"><span>Booking</span><span>Services</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-yellow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 16v-5m4 5V7m4 9v-8"/></svg></div><span class="capability-index">07</span><h3>الأنظمة الإدارية</h3><p>إدارة مبيعات ومخزون وعملاء وتقارير وصلاحيات.</p><div class="capability-tags"><span>ERP</span><span>CRM</span></div></article>
+      <article class="capability-card"><div class="capability-icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16M5 17V7l7-4 7 4v10M9 17v-5h6v5M3 19h18"/></svg></div><span class="capability-index">08</span><h3>مواقع الشركات والمنتجات</h3><p>Landing pages ومواقع تعريفية تساعد البراند على الظهور والتحويل.</p><div class="capability-tags"><span>Websites</span><span>Landing Pages</span></div></article>
+    </div>
+  </div>
+  <div class="capability-note"><span class="note-icon" aria-hidden="true">i</span><span>الأمثلة هنا توضيحية لنطاق الحلول التي ننفذها. بعض الأعمال السابقة أُنجزت ضمن فرق وشركات أخرى ولا نعرض تفاصيلها حفاظًا على السرية.</span></div>
+</section>
+
 <!-- SERVICES -->
 <section id="services" style="background:var(--surface);max-width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
 <div style="max-width:1200px;margin:0 auto;">
@@ -845,21 +551,6 @@
   <a href="#" class="nav-logo" style="font-size:16px;">Loop<span>Tech</span></a>
 </footer>
 
-<script>
-  // Set dark as default immediately to avoid flash
-  document.documentElement.setAttribute('data-theme', 'dark');
-
-  function toggleTheme() {
-    const root = document.documentElement;
-    const btn = document.querySelector('.theme-btn');
-    if (root.getAttribute('data-theme') === 'dark') {
-      root.setAttribute('data-theme', 'light');
-      btn.textContent = '🌙';
-    } else {
-      root.setAttribute('data-theme', 'dark');
-      btn.textContent = '☀️';
-    }
-  }
-</script>
+<script src="app.js" defer></script>
 </body>
 </html>
