@@ -33,7 +33,8 @@ const mixedMarkup = {
   cta: { ar: 'لديك مشروع<br>تريد تنفيذه؟', en: 'Have a project<br>you want to build?' }
 };
 
-document.documentElement.setAttribute('data-theme', 'light');
+const savedTheme = localStorage.getItem('looptech-theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 const sharedFallbacks = {
   'partials/nav.html': `<nav>
@@ -111,7 +112,8 @@ function translatePage(language) {
   button.setAttribute('aria-label', language === 'en' ? 'التبديل إلى العربية' : 'Switch to English');
   button.setAttribute('title', language === 'en' ? 'التبديل إلى العربية' : 'Switch to English');
   const themeButton = document.querySelector('.theme-btn');
-  if (themeButton) themeButton.setAttribute('aria-label', language === 'en' ? 'Enable dark mode' : 'تفعيل الوضع الداكن');
+  if (themeButton) themeButton.setAttribute('aria-label', language === 'en' ? (document.documentElement.getAttribute('data-theme') === 'dark' ? 'Enable light mode' : 'Enable dark mode') : (document.documentElement.getAttribute('data-theme') === 'dark' ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن'));
+  updateThemeControl();
   localStorage.setItem('looptech-language', language);
 }
 
@@ -120,14 +122,22 @@ function toggleLanguage() {
   translatePage(current === 'ar' ? 'en' : 'ar');
 }
 
+function updateThemeControl() {
+  const button = document.querySelector('.theme-btn');
+  if (!button) return;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  button.textContent = isDark ? '☀' : '☾';
+  button.setAttribute('aria-label', isDark ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن');
+  button.setAttribute('title', isDark ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن');
+}
+
 function toggleTheme() {
   const root = document.documentElement;
-  const button = document.querySelector('.theme-btn');
   const isDark = root.getAttribute('data-theme') === 'dark';
-  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  button.textContent = isDark ? '☾' : '☀';
-  button.setAttribute('aria-label', isDark ? 'تفعيل الوضع الداكن' : 'تفعيل الوضع الفاتح');
-  button.setAttribute('title', isDark ? 'تفعيل الوضع الداكن' : 'تفعيل الوضع الفاتح');
+  const nextTheme = isDark ? 'light' : 'dark';
+  root.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('looptech-theme', nextTheme);
+  updateThemeControl();
 }
 
 window.toggleTheme = toggleTheme;
@@ -137,6 +147,7 @@ async function initializePage() {
   try {
     await loadIncludes();
     markCurrentNav();
+    updateThemeControl();
   } catch (error) {
     console.error('Shared layout could not be loaded:', error);
   }
